@@ -265,7 +265,7 @@ function buildHTML(b, bi){
   // 7 finish (hidden when skirted — finish is S)
   if (b.leg && b.leg !== '1') h += `<div class="step" id="b${bi}-fin"><h3>7. Choose your leg finish</h3>${tiles(bi,'fin',FINISHES)}</div>`;
   // 8 fabric
-  h += `<div class="step" id="b${bi}-fabric"><h3>${b.leg==='1'?7:8}. Your ${b.cover?b.cover.toLowerCase():'fabric or leather'}</h3><div class="grid">
+  h += `<div class="step" id="b${bi}-fabric"><h3>${(b.leg && b.leg!=='1')?8:7}. Your ${b.cover?b.cover.toLowerCase():'fabric or leather'}</h3><div class="grid">
     <div class="f"><label>${b.cover||'Fabric / leather'} name <span class="req">*</span></label><input value="${esc(b.fabric)}" oninput="setv(${bi},'fabric',this.value)" placeholder="Pattern name"></div>
     <div class="f"><label>Color / number</label><input value="${esc(b.color)}" oninput="setv(${bi},'color',this.value)"></div></div>
     <p class="hint">Not sure yet? Write the swatch you're considering and your dealer can help you finalize it.</p></div>`;
