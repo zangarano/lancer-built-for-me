@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lancer Built For Me — Build Your Piece</title>
+<meta name="description" content="Build your Lancer Built For Me sofa or sectional, then print it or save it as a PDF for your Lancer dealer.">
+<style>
+:root{--navy:#13283c;--navy2:#1d3f66;--ink:#1b1f24;--mute:#5b6470;--line:#d6dbe1;--bg:#f2f4f7;--pick:#e7eef7;--warn:#b42318}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:860px;margin:0 auto;padding:0 14px 120px}
+header.top{background:#fff;border-bottom:4px solid var(--navy);padding:14px 0 10px}
+header.top .wrap{padding-bottom:0;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header.top img{height:56px;width:auto}
+header.top h1{margin:0;font-size:26px;color:var(--navy);letter-spacing:-.3px}
+header.top p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.intro{margin:16px 0 6px;color:var(--mute);font-size:15px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0}
+.card h2{margin:0 0 4px;font-size:19px;color:var(--navy)}
+.step{border-top:1px solid var(--line);padding:14px 0 4px;margin-top:12px}
+.step:first-of-type{border-top:0;margin-top:0}
+.step h3{margin:0 0 10px;font-size:16px;color:var(--navy)}
+.step h3 small{font-weight:400;color:var(--mute)}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{border:2px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;min-height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px}
+.tile:hover{border-color:var(--navy2)}
+.tile.on{border-color:var(--navy);background:var(--pick);box-shadow:inset 0 0 0 1px var(--navy)}
+.tile .code{font-size:11px;color:var(--mute);font-weight:600}
+.tile.big{flex:1 1 220px;padding:14px;align-items:flex-start;text-align:left}
+.tile.big b{font-size:17px}
+.tile.big span{color:var(--mute);font-size:14px}
+.tile.icon{width:104px}
+.spr{background-repeat:no-repeat;border-radius:4px;background-color:#fff}
+.up{color:var(--warn);font-weight:700}
+.pieces{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.piece{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:8px;background:#fff}
+.piece .nm{flex:1;font-size:15px}
+.piece .nm .code{display:block;font-size:11px;color:var(--mute);font-weight:600}
+.piece button{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:8px;min-width:40px;height:40px;cursor:pointer;font-weight:700}
+.chosen{margin:12px 0 0;padding:0;list-style:none}
+.chosen li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;background:#fafbfc}
+.chosen li .n{width:22px;color:var(--mute);font-weight:700}
+.chosen li .t{flex:1}
+.chosen li .t small{display:block;color:var(--mute)}
+.chosen li button{border:1px solid var(--line);background:#fff;border-radius:6px;width:36px;height:36px;cursor:pointer}
+.qty{display:flex;align-items:center;gap:6px}
+.qty input{width:52px;height:36px;text-align:center;border:1px solid var(--line);border-radius:6px}
+.hint{color:var(--mute);font-size:13px;margin:6px 0 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:3px}
+.f input,.f textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;min-height:44px;background:#fff}
+.f textarea{min-height:70px;resize:vertical}
+.f.full{grid-column:1/-1}
+.req{color:var(--warn)}
+.missing{outline:2px solid var(--warn);outline-offset:2px;border-radius:10px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.btn{border:0;border-radius:10px;padding:12px 18px;min-height:46px;font-weight:700;cursor:pointer}
+.btn.pri{background:var(--navy);color:#fff}
+.btn.sec{background:#fff;color:var(--navy);border:1px solid var(--navy)}
+.btn.ghost{background:transparent;color:var(--mute);text-decoration:underline;padding:12px 6px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:10px 14px;box-shadow:0 -4px 14px rgba(0,0,0,.06);z-index:5}
+.bar .in{max-width:860px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.bar .msg{flex:1;font-size:14px;color:var(--warn)}
+.buildhead{display:flex;align-items:center;gap:10px}
+.buildhead h2{flex:1}
+.foot{color:var(--mute);font-size:13px;margin:20px 0}
+.foot a{color:var(--navy2)}
+#printout{display:none}
+@media (max-width:560px){.grid{grid-template-columns:1fr}.tile.icon{width:calc(33.33% - 6px)}header.top h1{font-size:22px}header.top img{height:44px}}
+
+/* ---------- PRINT ---------- */
+@page{size:letter;margin:.45in}
+@media print{
+  body{background:#fff;font-size:11pt}
+  header.top,.wrap,.bar{display:none!important}
+  #printout{display:block}
+  .p-head{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--navy);padding-bottom:6px;margin-bottom:8px}
+  .p-head img{height:46px}
+  .p-head .t{flex:1}
+  .p-head h1{margin:0;font-size:18pt;color:var(--navy)}
+  .p-head p{margin:0;font-size:9pt;color:#444}
+  .p-head .id{text-align:right;font-size:9pt}
+  .p-cust{display:grid;grid-template-columns:repeat(3,1fr);gap:2px 16px;font-size:10pt;margin:6px 0 8px}
+  .p-cust div{border-bottom:1px solid #999;padding:3px 0;min-height:22px}
+  .p-cust b{font-size:8pt;color:#555;font-weight:600;display:block}
+  .p-build{border:1px solid #888;border-radius:6px;padding:8px 10px;margin:8px 0;break-inside:avoid}
+  .p-build h2{margin:0 0 6px;font-size:12.5pt;color:var(--navy)}
+  .p-sum{font-size:10.5pt;margin:0 0 6px}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  th,td{border:1px solid #aaa;padding:3px 5px;text-align:left;vertical-align:top}
+  th{background:#eef1f5;font-size:8.5pt}
+  .p-note{font-size:8.5pt;color:#444;margin:4px 0 0}
+  .p-sig{display:grid;grid-template-columns:2fr 1fr 2fr 1fr;gap:16px;margin-top:26px;font-size:8.5pt;color:#444}
+  .p-sig div{border-top:1px solid #000;padding-top:2px}
+  .p-foot{font-size:8pt;color:#555;margin-top:10px;border-top:1px solid #ccc;padding-top:4px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <img src="lancer-logo.svg" alt="Lancer" onerror="this.style.display='none'">
+    <div>
+      <h1>Built For Me Program</h1>
+      <p>Custom upholstery, made to order in Star, NC · Made in the USA</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <p class="intro">Build your piece in a few steps, then print it or save it as a PDF and bring it to your Lancer dealer. Your dealer will confirm pricing, upcharges and your order.</p>
+  <div id="builds"></div>
+  <div class="btnrow"><button class="btn sec" onclick="addBuild()">+ Add another build</button></div>
+
+  <div class="card" id="custCard">
+    <h2>Your information</h2>
+    <div class="grid" style="margin-top:10px">
+      <div class="f"><label for="cname">Your name <span class="req">*</span></label><input id="cname" autocomplete="name" placeholder="First and last name"></div>
+      <div class="f"><label for="cphone">Phone</label><input id="cphone" type="tel" autocomplete="tel"></div>
+      <div class="f"><label for="cemail">Email</label><input id="cemail" type="email" inputmode="email" autocomplete="email"></div>
+      <div class="f"><label for="dealer">Dealer / store</label><input id="dealer" placeholder="Where you're shopping"></div>
+      <div class="f"><label for="rep">Salesperson</label><input id="rep"></div>
+      <div class="f full"><label for="notes">Notes</label><textarea id="notes" placeholder="Anything else your dealer should know (room size, delivery, questions)"></textarea></div>
+    </div>
+  </div>
+
+  <p class="foot">Options and sizes are from Lancer's Built For Me program sheets (October 2023). Items marked <span class="up">*</span> carry an upcharge. Lancer does not sell directly to the public — <a href="https://www.lancerfurniture.com/find-a-dealer/" target="_blank" rel="noopener">find a Lancer dealer</a>. <button class="btn ghost" onclick="clearAll()">Start over</button></p>
+</div>
+
+<div class="bar"><div class="in"><span class="msg" id="msg"></span><button class="btn pri" onclick="doPrint()">Print / Save PDF</button></div></div>
+
+<div id="printout"></div>
+
+<script>
+/* ================= PROGRAM DATA (Lancer Built For Me, October 2023 sheets) ================= */
+const SHEET = 'https://www.lancerfurniture.com/built-for-me/images/Built-For-Me-all-October-2023-1.jpg';
+// Icon crops on SHEET (natural px: x, y, w, h)
+const ARMS = [
+  {c:'1',  n:'Panel',            r:[159,1497,118,117]},
+  {c:'1T', n:'Panel with Tacks', up:true, r:[338,1497,118,117]},
+  {c:'2',  n:'Sock',             r:[561,1497,118,117]},
+  {c:'4',  n:'Track',            r:[740,1497,118,117]},
+  {c:'5',  n:'Flared',           r:[923,1497,118,117]},
+  {c:'6',  n:'Cigar',            r:[1105,1497,118,117]},
+  {c:'7',  n:'Key',              r:[1273,1497,118,117]},
+];
+const BACKS = [
+  {c:'1', n:'Attached Knife', r:[237,1783,118,119]},
+  {c:'2', n:'Loose Knife',    r:[545,1783,118,119]},
+  {c:'3', n:'Attached Box',   r:[854,1783,118,119]},
+  {c:'4', n:'Loose Box',      r:[1162,1783,118,119]},
+];
+const LEGS = [
+  {c:'1', n:'Skirted', up:true,    r:[150,2067,100,121]},
+  {c:'2', n:'Block',               r:[329,2067,94,121]},
+  {c:'3', n:'Square',              r:[502,2067,111,121]},
+  {c:'6', n:'Carolina Bun Foot',   r:[657,2067,153,121]},
+];
+const FINISHES = [
+  {c:'C',n:'Cherry'},{c:'B',n:'Black'},{c:'D',n:'Driftwood'},{c:'O',n:'Oak'},
+  {c:'W',n:'White'},{c:'P',n:'Pecan'},{c:'A',n:'Beachwood'}
+];
+const DEPTHS = ['21','23','25'];
+// Sizes: [length with Panel/Sock/Flared/Key arm, length with Track/Cigar arm, depth, height]
+const PROGRAMS = {
+  sect: {name:'Sectional', blurb:'Build an L, U or chaise sectional piece by piece', pieces:[
+    {c:'CL', n:'Left-Facing 1 Arm Corner Sofa',      s:[91,88,37,38]},
+    {c:'CR', n:'Right-Facing 1 Arm Corner Sofa',     s:[91,88,37,38]},
+    {c:'WE', n:'Corner Chair Wedge',                 s:[37,37,37,38], armless:true},
+    {c:'PW', n:'Curved Pie Wedge',                   s:[37,37,37,38], armless:true},
+    {c:'CA', n:'Left-Facing 1 Arm Corner Loveseat',  s:[67,64,37,38]},
+    {c:'CB', n:'Right-Facing 1 Arm Corner Loveseat', s:[67,64,37,38]},
+    {c:'AL', n:'Armless Loveseat',                   s:[48,48,37,38], armless:true},
+    {c:'LL', n:'Left-Facing 1 Arm Loveseat',         s:[53,50,37,38]},
+    {c:'RL', n:'Right-Facing 1 Arm Loveseat',        s:[53,50,37,38]},
+    {c:'LS', n:'Left-Facing 1 Arm Sofa',             s:[76,73,37,38]},
+    {c:'RS', n:'Right-Facing 1 Arm Sofa',            s:[76,73,37,38]},
+    {c:'AS', n:'Armless Sofa',                       s:[72,72,37,38], armless:true},
+    {c:'QL', n:'Left-Facing 1 Arm Queen Sleeper',    s:[76,73,37,38]},
+    {c:'QR', n:'Right-Facing 1 Arm Queen Sleeper',   s:[76,73,37,38]},
+    {c:'AQ', n:'Armless Queen Sleeper',              s:[72,72,37,38], armless:true},
+    {c:'LC', n:'Left-Facing 1 Arm Chair',            s:[29,24,37,38]},
+    {c:'RC', n:'Right-Facing 1 Arm Chair',           s:[29,24,37,38]},
+    {c:'LCH',n:'Left-Facing 1 Arm Chaise',           s:[29,24,63,38]},
+    {c:'RCH',n:'Right-Facing 1 Arm Chaise',          s:[29,24,63,38]},
+    {c:'OT', n:'Ottoman',                            s:[24,24,26,17], armless:true},
+  ]},
+  stat: {name:'Sofas, Chairs & Sleepers', blurb:'Sofa, loveseat, chair & ½, chair, sleepers, ottoman', pieces:[
+    {c:'S', n:'Sofa',          s:[85,78,36,38]},
+    {c:'T', n:'Short Sofa',    s:[78,71,36,38]},
+    {c:'L', n:'Loveseat',      s:[61,54,36,38]},
+    {c:'H', n:'Chair & ½',     s:[48,41,36,38]},
+    {c:'C', n:'Chair',         s:[40,33,36,38]},
+    {c:'Q', n:'Queen Sleeper', s:[85,78,36,38]},
+    {c:'F', n:'Full Sleeper',  s:[78,71,36,38]},
+    {c:'O', n:'Ottoman',       s:[24,24,26,17], armless:true},
+  ]},
+};
+const NARROW_ARMS = ['4','6']; // Track, Cigar → shorter lengths
+
+/* ================= STATE ================= */
+const KEY = 'lancer-bfm-v1';
+let S = load() || {builds:[newBuild()], cust:{}};
+function newBuild(){ return {prog:'', cover:'', depth:'', items:[], arm:'', back:'', leg:'', fin:'', fabric:'', color:''}; }
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+const $ = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const find = (arr,c) => arr.find(x => x.c === c);
+
+/* ================= RENDER ================= */
+function spr(r, box){
+  const s = box / Math.max(r[2], r[3]);
+  return `<div class="spr" style="width:${Math.round(r[2]*s)}px;height:${Math.round(r[3]*s)}px;background-image:url('${SHEET}');background-size:${Math.round(1500*s)}px auto;background-position:-${Math.round(r[0]*s)}px -${Math.round(r[1]*s)}px"></div>`;
+}
+function tiles(bi, field, list, opts={}){
+  const b = S.builds[bi];
+  return `<div class="tiles">` + list.map(o => `<button type="button" class="tile ${opts.icon?'icon':''} ${b[field]===o.c?'on':''}" onclick="pick(${bi},'${field}','${o.c}')">
+      ${opts.icon && o.r ? spr(o.r, opts.icon) : ''}
+      <span>${esc(o.n)}${o.up?'<span class="up">*</span>':''}</span>${opts.nocode?'':`<span class="code">${esc(o.c)}</span>`}</button>`).join('') + `</div>`;
+}
+function render(){
+  $('builds').innerHTML = S.builds.map((b,bi) => buildHTML(b,bi)).join('');
+  for (const k of ['cname','cphone','cemail','dealer','rep','notes']) if ($(k).value !== (S.cust[k]||'')) $(k).value = S.cust[k]||'';
+  save();
+}
+function buildHTML(b, bi){
+  const multi = S.builds.length > 1;
+  let h = `<div class="card" id="build${bi}"><div class="buildhead"><h2>${multi?`Build ${bi+1}`:'Your build'}</h2>${multi?`<button class="btn ghost" onclick="delBuild(${bi})">Remove</button>`:''}</div>`;
+  // 1 program
+  h += `<div class="step" id="b${bi}-prog"><h3>1. What are you building?</h3><div class="tiles">` +
+    Object.entries(PROGRAMS).map(([k,p]) => `<button type="button" class="tile big ${b.prog===k?'on':''}" onclick="pick(${bi},'prog','${k}')"><b>${p.name}</b><span>${p.blurb}</span></button>`).join('') + `</div></div>`;
+  if (!b.prog) return h + `</div>`;
+  const P = PROGRAMS[b.prog];
+  // 2 seat depth
+  h += `<div class="step" id="b${bi}-depth"><h3>2. Choose your cover and seat depth</h3>
+    <div class="tiles">${['Fabric','Leather'].map(c=>`<button type="button" class="tile ${b.cover===c?'on':''}" onclick="pick(${bi},'cover','${c}')">${c}</button>`).join('')}</div>
+    <div class="tiles" style="margin-top:8px">${DEPTHS.map((d,i)=>{const code=(b.cover==='Leather'?'L':'')+(i+1);return `<button type="button" class="tile ${b.depth===d?'on':''}" onclick="pick(${bi},'depth','${d}')"><span>${d}″ seat</span><span class="code">${b.cover?code:''}</span></button>`;}).join('')}</div></div>`;
+  // 3 pieces
+  const narrow = NARROW_ARMS.includes(b.arm);
+  h += `<div class="step" id="b${bi}-items"><h3>3. Choose your ${b.prog==='sect'?'sectional pieces':'pieces'} ${b.prog==='sect'?'<small>— add them left to right as you face the sectional</small>':''}</h3>`;
+  const catalog = `<div class="pieces" style="margin-top:10px">` +
+    P.pieces.map(p => `<div class="piece"><div class="nm">${esc(p.n)}<span class="code">${p.c} · ${sizeTxt(p,narrow)}</span></div><button type="button" aria-label="Add ${esc(p.n)}" onclick="addItem(${bi},'${p.c}')">+</button></div>`).join('') + `</div>`;
+  if (b.items.length){
+    h += `<ul class="chosen" style="margin-top:0">` + b.items.map((it,ii) => { const p = find(P.pieces,it.c); return `<li><span class="n">${ii+1}</span><span class="t">${esc(p.n)}<small>${p.c} · ${sizeTxt(p,narrow)}</small></span>
+      <span class="qty"><button type="button" onclick="qty(${bi},${ii},-1)" aria-label="Less">−</button><input type="number" min="1" value="${it.q}" onchange="setQty(${bi},${ii},this.value)" aria-label="Quantity"><button type="button" onclick="qty(${bi},${ii},1)" aria-label="More">+</button></span>
+      ${b.prog==='sect'?`<button type="button" onclick="move(${bi},${ii},-1)" aria-label="Move left">↑</button><button type="button" onclick="move(${bi},${ii},1)" aria-label="Move right">↓</button>`:''}
+      <button type="button" onclick="delItem(${bi},${ii})" aria-label="Remove">✕</button></li>`; }).join('') + `</ul>`;
+    if (b.prog==='sect'){ const w = runWidth(b); if (w) h += `<p class="hint">Left-facing / right-facing = the arm is on that side as you face the piece. Pieces in a straight run add up to about <b>${w}″</b> wide.</p>`; else h += `<p class="hint">Left-facing / right-facing = the arm is on that side as you face the piece.</p>`; }
+  } else h += `<p class="hint">Tap + to add a piece. Your pieces show up here.</p>`;
+  h += catalog + `</div>`;
+  // 4 arm
+  h += `<div class="step" id="b${bi}-arm"><h3>4. Choose your arm</h3>${tiles(bi,'arm',ARMS,{icon:64})}<p class="hint">Track and Cigar arms are slimmer, so those pieces are a few inches shorter.</p></div>`;
+  // 5 back
+  h += `<div class="step" id="b${bi}-back"><h3>5. Choose your back</h3>${tiles(bi,'back',BACKS,{icon:64})}</div>`;
+  // 6 leg
+  h += `<div class="step" id="b${bi}-leg"><h3>6. Choose your leg</h3>${tiles(bi,'leg',LEGS,{icon:64})}</div>`;
+  // 7 finish (hidden when skirted — finish is S)
+  if (b.leg && b.leg !== '1') h += `<div class="step" id="b${bi}-fin"><h3>7. Choose your leg finish</h3>${tiles(bi,'fin',FINISHES)}</div>`;
+  // 8 fabric
+  h += `<div class="step" id="b${bi}-fabric"><h3>${b.leg==='1'?7:8}. Your ${b.cover?b.cover.toLowerCase():'fabric or leather'}</h3><div class="grid">
+    <div class="f"><label>${b.cover||'Fabric / leather'} name <span class="req">*</span></label><input value="${esc(b.fabric)}" oninput="setv(${bi},'fabric',this.value)" placeholder="Pattern name"></div>
+    <div class="f"><label>Color / number</label><input value="${esc(b.color)}" oninput="setv(${bi},'color',this.value)"></div></div>
+    <p class="hint">Not sure yet? Write the swatch you're considering and your dealer can help you finalize it.</p></div>`;
+  return h + `</div>`;
+}
+function sizeTxt(p, narrow){ const L = narrow && !p.armless ? p.s[1] : p.s[0]; return `${L}″W × ${p.s[2]}″D × ${p.s[3]}″H`; }
+function len(b, it){ const p = find(PROGRAMS[b.prog].pieces, it.c); return NARROW_ARMS.includes(b.arm) && !p.armless ? p.s[1] : p.s[0]; }
+function runWidth(b){
+  // straight run only: no corner pieces, no ottoman
+  if (b.items.some(i => ['CL','CR','WE','PW','CA','CB','OT'].includes(i.c))) return 0;
+  if (b.items.length < 2) return 0;
+  return b.items.reduce((t,i) => t + len(b,i)*i.q, 0);
+}
+
+/* ================= ACTIONS ================= */
+function pick(bi, f, v){
+  const b = S.builds[bi];
+  if (f==='prog' && b.prog !== v){ b.items = []; }
+  b[f] = (b[f]===v && f!=='prog') ? '' : v;
+  if (f==='leg') b.fin = b.leg==='1' ? 'S' : (b.fin==='S' ? '' : b.fin);
+  render(); clearMsg();
+}
+function setv(bi,f,v){ S.builds[bi][f] = v; save(); clearMsg(); }
+function addItem(bi,c){ const b=S.builds[bi]; if (b.prog==='stat' && b.items.find(i=>i.c===c)) b.items.find(i=>i.c===c).q++; else b.items.push({c,q:1}); render(); clearMsg(); }
+function delItem(bi,ii){ S.builds[bi].items.splice(ii,1); render(); }
+function qty(bi,ii,d){ const it=S.builds[bi].items[ii]; it.q=Math.max(1,it.q+d); render(); }
+function setQty(bi,ii,v){ S.builds[bi].items[ii].q=Math.max(1,parseInt(v)||1); render(); }
+function move(bi,ii,d){ const a=S.builds[bi].items, j=ii+d; if(j<0||j>=a.length)return; [a[ii],a[j]]=[a[j],a[ii]]; render(); }
+function addBuild(){ S.builds.push(newBuild()); render(); $('build'+(S.builds.length-1)).scrollIntoView({behavior:'smooth'}); }
+function delBuild(bi){ S.builds.splice(bi,1); if(!S.builds.length) S.builds.push(newBuild()); render(); }
+function clearAll(){ if (!confirm('Start over? This clears everything on this page.')) return; S = {builds:[newBuild()], cust:{}}; render(); window.scrollTo(0,0); }
+for (const k of ['cname','cphone','cemail','dealer','rep','notes']) document.getElementById(k).addEventListener('input', e => { S.cust[k] = e.target.value; save(); clearMsg(); });
+function clearMsg(){ $('msg').textContent=''; document.querySelectorAll('.missing').forEach(e=>e.classList.remove('missing')); }
+
+/* ================= VALIDATE + PRINT ================= */
+function missing(){
+  const out = [];
+  S.builds.forEach((b,bi) => {
+    const tag = S.builds.length>1 ? `Build ${bi+1}: ` : '';
+    if (!b.prog) { out.push([`b${bi}-prog`, tag+'what you are building']); return; }
+    if (!b.cover || !b.depth) out.push([`b${bi}-depth`, tag+'cover and seat depth']);
+    if (!b.items.length) out.push([`b${bi}-items`, tag+'at least one piece']);
+    if (!b.arm) out.push([`b${bi}-arm`, tag+'arm']);
+    if (!b.back) out.push([`b${bi}-back`, tag+'back']);
+    if (!b.leg) out.push([`b${bi}-leg`, tag+'leg']);
+    else if (!b.fin) out.push([`b${bi}-fin`, tag+'leg finish']);
+    if (!b.fabric.trim()) out.push([`b${bi}-fabric`, tag+(b.cover||'fabric').toLowerCase()+' name']);
+  });
+  if (!(S.cust.cname||'').trim()) out.push(['custCard','your name']);
+  return out;
+}
+function doPrint(){
+  clearMsg();
+  const m = missing();
+  if (m.length){
+    m.forEach(([id]) => $(id) && $(id).classList.add('missing'));
+    $('msg').textContent = 'Still needed: ' + m.map(x=>x[1]).join(', ');
+    $(m[0][0]).scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  $('printout').innerHTML = printHTML();
+  const img = document.querySelector('#printout img');
+  const go = () => window.print();
+  if (img && !img.complete){ img.onload = img.onerror = go; setTimeout(go, 1500); } else go();
+}
+function depthCode(b){ return (b.cover==='Leather'?'L':'') + (DEPTHS.indexOf(b.depth)+1); }
+function capName(s){ return s.trim().replace(/\s+/g,' ').replace(/\b([a-z])/g, c => c.toUpperCase()); }
+function printHTML(){
+  const c = S.cust, d = new Date();
+  const ref = 'BFM-' + d.toISOString().slice(2,10).replace(/-/g,'') + '-' + String(d.getHours()).padStart(2,'0') + String(d.getMinutes()).padStart(2,'0');
+  let h = `<div class="p-head"><img src="lancer-logo.svg" alt="Lancer" onerror="this.style.display='none'"><div class="t"><h1>Built For Me Program</h1><p>Custom built to order · Made in the USA</p></div>
+    <div class="id"><b>${ref}</b><br>${d.toLocaleDateString('en-US')}</div></div>
+    <div class="p-cust">
+      <div><b>Customer</b>${esc(capName(c.cname||''))}</div><div><b>Phone</b>${esc(c.cphone)}</div><div><b>Email</b>${esc(c.cemail)}</div>
+      <div><b>Dealer / store</b>${esc(c.dealer)}</div><div><b>Salesperson</b>${esc(c.rep)}</div><div><b>Dealer order #</b></div>
+    </div>`;
+  S.builds.forEach((b,bi) => {
+    const P = PROGRAMS[b.prog], arm = find(ARMS,b.arm), back = find(BACKS,b.back), leg = find(LEGS,b.leg);
+    const fin = b.fin==='S' ? {c:'S', n:'Skirted'} : find(FINISHES,b.fin);
+    const dc = depthCode(b);
+    h += `<div class="p-build"><h2>${S.builds.length>1?`Build ${bi+1} — `:''}${P.name}</h2>
+      <p class="p-sum">${b.depth}″ seat depth in ${b.cover.toLowerCase()} <b>${esc(b.fabric)}${b.color?' '+esc(b.color):''}</b>, ${arm.n.toLowerCase()} arm${arm.up?'*':''}, ${back.n.toLowerCase()} back, ${leg.n.toLowerCase()} leg${leg.up?'*':''}${b.leg==='1'?'':' in '+fin.n.toLowerCase()}.</p>
+      <table><tr><th>Seat depth</th><th>Arm</th><th>Back</th><th>Leg</th><th>Leg finish</th><th>${b.cover}</th></tr>
+      <tr><td>${dc} · ${b.depth}″${b.cover==='Leather'?' Leather':''}</td><td>${arm.c} · ${arm.n}${arm.up?'*':''}</td><td>${back.c} · ${back.n}</td><td>${leg.c} · ${leg.n}${leg.up?'*':''}</td><td>${fin.c} · ${fin.n}${b.leg==='1'?'*':''}</td><td>${esc(b.fabric)}${b.color?' — '+esc(b.color):''}</td></tr></table>
+      <table style="margin-top:6px"><tr>${b.prog==='sect'?'<th>Pos.</th>':''}<th>Item</th><th>Description</th><th>Qty</th><th>Approx. size (W × D × H)</th><th>Option codes (steps 1–6)</th></tr>` +
+      b.items.map((it,ii) => { const p = find(P.pieces,it.c); return `<tr>${b.prog==='sect'?`<td>${ii+1}</td>`:''}<td>${p.c}</td><td>${esc(p.n)}</td><td>${it.q}</td><td>${sizeTxt(p, NARROW_ARMS.includes(b.arm))}</td><td>${[dc,p.c,arm.c,back.c,leg.c,fin.c].join(' · ')}</td></tr>`; }).join('') + `</table>`;
+    if (b.prog==='sect') { const w = runWidth(b); h += `<p class="p-note">Sectional pieces listed left to right as you face it. LF/RF = arm on the left/right as you face the piece.${w?` Straight run ≈ ${w}″ wide.`:''}</p>`; }
+    h += `</div>`;
+  });
+  if ((c.notes||'').trim()) h += `<div class="p-build"><h2>Notes</h2><div style="white-space:pre-wrap;font-size:10pt">${esc(c.notes)}</div></div>`;
+  h += `<div class="p-sig"><div>Customer signature</div><div>Date</div><div>Dealer</div><div>Date</div></div>
+    <div class="p-foot">* Upcharge item — your dealer will confirm pricing. Sizes are approximate, from Lancer's Built For Me program sheets (Oct 2023); confirm with your dealer before ordering. Lancer does not sell directly to the public — find a dealer at lancerfurniture.com/find-a-dealer.</div>`;
+  return h;
+}
+render();
+</script>
+</body>
+</html>
