@@ -135,7 +135,11 @@ header.top p{margin:2px 0 0;color:var(--mute);font-size:14px}
 
 <script>
 /* ================= PROGRAM DATA (Lancer Built For Me, October 2023 sheets) ================= */
-const SHEET = 'https://www.lancerfurniture.com/built-for-me/images/Built-For-Me-all-October-2023-1.jpg';
+// Page 1 of Lancer's Built For Me sheet, saved next to this file (Lancer's site blocks hotlinking).
+// Option pictures appear only once bfm-sheet.jpg is present; otherwise tiles show labels only.
+const SHEET = 'bfm-sheet.jpg';
+let SHEET_OK = false;
+(() => { const i = new Image(); i.onload = () => { if (i.naturalWidth === 1500) { SHEET_OK = true; render(); } }; i.src = SHEET; })();
 // Icon crops on SHEET (natural px: x, y, w, h)
 const ARMS = [
   {c:'1',  n:'Panel',            r:[159,1497,118,117]},
@@ -212,6 +216,7 @@ const find = (arr,c) => arr.find(x => x.c === c);
 
 /* ================= RENDER ================= */
 function spr(r, box){
+  if (!SHEET_OK) return '';
   const s = box / Math.max(r[2], r[3]);
   return `<div class="spr" style="width:${Math.round(r[2]*s)}px;height:${Math.round(r[3]*s)}px;background-image:url('${SHEET}');background-size:${Math.round(1500*s)}px auto;background-position:-${Math.round(r[0]*s)}px -${Math.round(r[1]*s)}px"></div>`;
 }
